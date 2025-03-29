@@ -4,19 +4,29 @@ import { User } from "../types/user";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Trash2, Eye } from "lucide-react";
+import { Trash2, Eye, Search } from "lucide-react";
 import Breadcrumb from "../components/Breadcrumb";
 
 const UserList = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [deleteUserId, setDeleteUserId] = useState<number | null>(null);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetchUsers();
   }, [page]);
+
+  useEffect(() => {
+    setFilteredUsers(
+      users.filter(user =>
+        `${user.first_name} ${user.last_name}`.toLowerCase().includes(search.toLowerCase())
+      )
+    );
+  }, [search, users]);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -51,18 +61,27 @@ const UserList = () => {
   };
 
   return (
-    <div className="p-6 w-full max-w-4xl mx-auto">
-
+    <div className="p-6 w-screen mx-auto">
       <h2 className="text-3xl font-bold -mt-12 text-gray-800">User List</h2>
       <Breadcrumb paths={[{ name: "Home", link: "/" }, { name: "Users" }]} />
 
+      <div className="relative w-full max-w-md mx-auto mt-4">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Search users..."
+        />
+      </div>
 
       {loading ? (
         <p className="text-center text-lg text-gray-600">Loading...</p>
       ) : (
         <>
-          <ul className="divide-y divide-gray-200 border w-[98vw] rounded-lg shadow-lg bg-white mt-12">
-            {users.map((user) => (
+          <ul className="divide-y divide-gray-200 border w-full rounded-lg shadow-lg bg-white mt-12">
+            {filteredUsers.map((user) => (
               <li key={user.id} className="p-5 flex items-center space-x-4">
                 <img
                   src={user.avatar}
@@ -80,7 +99,7 @@ const UserList = () => {
                     to={`/users/${user.id}`}
                     className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md flex items-center space-x-2 hover:bg-blue-600 transition"
                   >
-                    <Eye size={16} className="text-white "/>
+                    <Eye size={16} className="text-white" />
                   </Link>
                   <button
                     onClick={() => setDeleteUserId(user.id)}
@@ -116,12 +135,10 @@ const UserList = () => {
       )}
 
       {deleteUserId && (
-        <div className="fixed inset-0 bg-opacity-5 bg-gray-200 flex justify-center items-center ">
+        <div className="fixed inset-0 bg-opacity-5 bg-gray-200 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center">
             <h3 className="text-xl font-semibold mb-4">Confirm Delete</h3>
-            <p className="text-gray-600 mb-6">
-              Are you sure you want to delete this user?
-            </p>
+            <p className="text-gray-600 mb-6">Are you sure you want to delete this user?</p>
             <div className="flex justify-center space-x-4">
               <button
                 onClick={confirmDelete}
