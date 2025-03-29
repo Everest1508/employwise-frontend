@@ -53,7 +53,7 @@ const UserList = () => {
   return (
     <div className="p-6 w-full max-w-4xl mx-auto">
 
-      <h2 className="text-3xl font-bold -mt-40 text-gray-800">User List</h2>
+      <h2 className="text-3xl font-bold -mt-12 text-gray-800">User List</h2>
       <Breadcrumb paths={[{ name: "Home", link: "/" }, { name: "Users" }]} />
 
 
