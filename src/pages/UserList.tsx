@@ -61,7 +61,7 @@ const UserList = () => {
         <p className="text-center text-lg text-gray-600">Loading...</p>
       ) : (
         <>
-          <ul className="divide-y divide-gray-200 border w-[98vw] rounded-lg shadow-lg bg-white">
+          <ul className="divide-y divide-gray-200 border w-[98vw] rounded-lg shadow-lg bg-white mt-12">
             {users.map((user) => (
               <li key={user.id} className="p-5 flex items-center space-x-4">
                 <img
@@ -80,22 +80,20 @@ const UserList = () => {
                     to={`/users/${user.id}`}
                     className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md flex items-center space-x-2 hover:bg-blue-600 transition"
                   >
-                    <Eye size={16} />
-                    <span>View</span>
+                    <Eye size={16} className="text-white "/>
                   </Link>
                   <button
                     onClick={() => setDeleteUserId(user.id)}
                     className="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md flex items-center space-x-2 hover:bg-red-600 transition"
                   >
                     <Trash2 size={16} />
-                    <span>Delete</span>
                   </button>
                 </div>
               </li>
             ))}
           </ul>
 
-          <div className="flex justify-center items-center mt-6 space-x-4">
+          <div className="flex justify-right items-center mt-6 space-x-4">
             <button
               onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
               disabled={page === 1}
